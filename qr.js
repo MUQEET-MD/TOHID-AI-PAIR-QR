@@ -13,48 +13,34 @@ const fs = require("fs-extra");
 const { Boom } = require("@hapi/boom");
 
 const MESSAGE = process.env.MESSAGE ||  `
-╭━━━〔 *TOHID_MD SESSION* 〕━━━┈⊷
+╭━━━〔 *MUQEET_MD SESSION* 〕━━━┈⊷
 ┃◈├•*SESSION GENERATED SUCCESSFULY* ✅
 ┃◈┃
 ┃◈├•*Gɪᴠᴇ ᴀ ꜱᴛᴀʀ ᴛᴏ ʀᴇᴘᴏ ꜰᴏʀ ᴄᴏᴜʀᴀɢᴇ* 🌟
-┃◈├•https://github.com/Tohidkhan6332/TOHID_MD
+┃◈├•https://github.com/muqeet908/MUQEET_MD
 ┃◈┃
 ┃◈├•*Tᴇʟᴇɢʀᴀᴍ Gʀᴏᴜᴘ* 🌟
-┃◈├•https://t.me/Tohid_Tech
+┃◈├•https://t.me/Muqeet656
 ┃◈┃
 ┃◈├•*WʜᴀᴛsAᴘᴘ Gʀᴏᴜᴘ* 🌟
-┃◈├•https://chat.whatsapp.com/IqRWSp7pXx8DIMtSgDICGu
+┃◈├•https://chat.whatsapp.com/Ewj28yRfkVnIUXZ29YRj5E
 ┃◈┃
 ┃◈├•*WʜᴀᴛsAᴘᴘ ᴄʜᴇɴɴᴀʟ* 🌟
-┃◈├•https://whatsapp.com/channel/0029VaGyP933bbVC7G0x0i2T
+┃◈├•https://whatsapp.com/channel/0029VbAqZNoDDmFSGN0sgx3L
 ┃◈┃
 ┃◈┃*Yᴏᴜ-ᴛᴜʙᴇ ᴛᴜᴛᴏʀɪᴀʟꜱ* 🌟 
-┃◈├•https://youtube.com/Tohidkhan_6332
+┃◈├•Coming Soon 🔜 (Inshallah 💕)
 ┃◈┃
 ┃◈├•*ɢɪᴛʜᴜʙ* 🌟
-┃◈├•http://GitHub.com/Tohidkhan6332
+┃◈├•http://GitHub.com/muqeet908
 ┃◈┃
 ┃◈├•*Wᴇʙsɪᴛᴇ* 🌟
-┃◈├•https://tohid-khan-web.vercel.app/
+┃◈├•ERROR ⚠️
 ┃◈┃
-┃◈├•*TOHID_MD--WHATTSAPP-BOT* 🥀
+┃◈├•*MUQEET_MD--WHATTSAPP-BOT* 🥀
 ┃◈╰──────────●●►
-┃◈╭─────────────●●►
-┃◈├ ╔═╦═╗───╔══╗╔╗╔╗╔╗
-┃◈├ ║║║║╠╦╦═╩╗╔╩╣╚╬╬╝║
-┃◈├ ║║║║║╔╩══╣║╬║║║║╬║
-┃◈├ ╚╩═╩╩╝───╚╩═╩╩╩╩═╝
-┃◈╰─────────────●●►
-╰─────────────●●►
+╰━━━〔 *MUQEET_MD SESSION* 〕━━━┈⊷
 ______________________________
-Use your Session ID Above to Deploy your Bot.
-Check on YouTube Channel for Deployment 
-Procedure(Ensure you have Github Account and Billed 
-Heroku Account First.)
-Don't Forget To Give Star⭐ To My Repo
-╭────────────────────┈⊷
-├━━━〔 *TOHID_MD SESSION* 〕━━━┈⊷
-╰────────────────────┈⊷
 `
 
 
