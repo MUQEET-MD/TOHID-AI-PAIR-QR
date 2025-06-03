@@ -34,6 +34,8 @@ const MESSAGE = process.env.MESSAGE || `
 ╰━━━〔 *MUQEET_MD SESSION* 〕━━━┈⊷
 ______________________________
 
+`;
+
 const { upload } = require('./mega');
 const {
     default: makeWASocket,
