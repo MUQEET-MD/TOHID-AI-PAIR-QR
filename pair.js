@@ -95,16 +95,9 @@ router.get('/', async (req, res) => {
                             for (let i = 0; i < length; i++) {
                                 result += characters.charAt(Math.floor(Math.random() * characters.length));
                             }
-  
                             return `Muqeet~${result}`;
-                          }
-
-                          async function downloadCreds(sessionId) {  
-                            try {
-                              if (!sessionId.startsWith('Muqeet~')) {
-                                throw new Error('Invalid SESSION_ID: It must start with "Muqeet~"');
-                              }
-
+                        }
+                        
                         // Upload credentials to Mega
                         const mega_url = await upload(fs.createReadStream(auth_path + 'creds.json'), `${randomMegaId()}.json`);
                         const Id_session = mega_url.replace('https://mega.nz/file/', '');
