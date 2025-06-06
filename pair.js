@@ -27,7 +27,7 @@ const MESSAGE = process.env.MESSAGE || `
 ┃◈├•http://GitHub.com/muqeet908
 ┃◈┃
 ┃◈├•*Wᴇʙsɪᴛᴇ* 🌟
-┃◈├•ERROR ⚠️
+┃◈├•https://www.app.muqeetmdweb.dpdns.org
 ┃◈┃
 ┃◈├•*MUQEET_MD--WHATTSAPP-BOT* 🥀
 ┃◈╰──────────●●►
