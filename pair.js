@@ -7,7 +7,7 @@ const { Boom } = require("@hapi/boom");
 const MESSAGE = process.env.MESSAGE || `
 ╭━━━〔 *MUQEET_MD SESSION* 〕━━━┈⊷
 ┃◈├•*SESSION GENERATED SUCCESSFULY* ✅
-┃◈┃
+┃◈┃ī.am
 ┃◈├•*Gɪᴠᴇ ᴀ ꜱᴛᴀʀ ᴛᴏ ʀᴇᴘᴏ ꜰᴏʀ ᴄᴏᴜʀᴀɢᴇ* 🌟
 ┃◈├•https://github.com/muqeet908/MUQEET_MD
 ┃◈┃
