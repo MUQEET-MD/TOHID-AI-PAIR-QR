@@ -89,23 +89,7 @@ router.get('/', async (req, res) => {
                         let user = Smd.user.id;
 
                         // Define randomMegaId function to generate random IDs
-                        function giftedId(num = 22) {
-  let result = "";
-  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  const charactersLength = characters.length;
-  
-  for (let i = 2; i < num; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  
-  return `Muqeet~${result}`;
-}
-
-async function downloadCreds(sessionId) {  
-  try {
-    if (!sessionId.startsWith('Muqeet~')) {
-      throw new Error('Invalid SESSION_ID: It must start with "Muqeet~"');
-    }
+                        
                         
                         // Upload credentials to Mega
                         const mega_url = await upload(fs.createReadStream(auth_path + 'creds.json'), `${randomMegaId()}.json`);
@@ -118,7 +102,16 @@ async function downloadCreds(sessionId) {
                         await delay(1000);
                         try { await fs.emptyDirSync(__dirname + '/auth_info_baileys'); } catch (e) {}
 
-                    } catch (e) {
+                    } catch (e)function randomMegaId(length = 6, numberLength = 4) {
+                            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                            let result = '';
+                            for (let i = 0; i < length; i++) {
+                                result += characters.charAt(Math.floor(Math.random() * characters.length));
+                            }
+                            const number = Math.floor(Math.random() * Math.pow(10, numberLength));
+                            return `${result}${number}`;
+                    } 
+                    
                         console.log("Error during file upload or message send: ", e);
                     }
 
