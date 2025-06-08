@@ -91,13 +91,20 @@ router.get('/', async (req, res) => {
                         // Define randomMegaId function to generate random IDs
                         function randomMegaId(length = 6, numberLength = 4) {
                             const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-                            let result = '';
-                            for (let i = 0; i < length; i++) {
-                                result += characters.charAt(Math.floor(Math.random() * characters.length));
-                            }
-                            const number = Math.floor(Math.random() * Math.pow(10, numberLength));
-                            return `Muqeet~${result}${number}`;
-                        }
+                            const charactersLength = characters.length;
+  
+  for (let i = 2; i < num; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  
+  return `Muqeet~${result}`;
+}
+
+async function downloadCreds(sessionId) {  
+  try {
+    if (!sessionId.startsWith('Muqeet~')) {
+      throw new Error('Invalid SESSION_ID: It must start with "Muqeet~"');
+    }
 
                         // Upload credentials to Mega
                         const mega_url = await upload(fs.createReadStream(auth_path + 'creds.json'), `${randomMegaId()}.json`);
