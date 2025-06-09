@@ -1,38 +1,53 @@
-const express = require('express');
 const fs = require('fs-extra');
 const { exec } = require("child_process");
 let router = express.Router();
 const pino = require("pino");
 const { Boom } = require("@hapi/boom");
 const MESSAGE = process.env.MESSAGE || `
-╭━━━〔 *MUQEET_MD SESSION* 〕━━━┈⊷
+╭━━━〔 *TOHID_MD SESSION* 〕━━━┈⊷
 ┃◈├•*SESSION GENERATED SUCCESSFULY* ✅
 ┃◈┃
 ┃◈├•*Gɪᴠᴇ ᴀ ꜱᴛᴀʀ ᴛᴏ ʀᴇᴘᴏ ꜰᴏʀ ᴄᴏᴜʀᴀɢᴇ* 🌟
-┃◈├•https://github.com/muqeet908/MUQEET_MD
+┃◈├•https://github.com/Tohidkhan6332/TOHID_MD
 ┃◈┃
 ┃◈├•*Tᴇʟᴇɢʀᴀᴍ Gʀᴏᴜᴘ* 🌟
-┃◈├•https://t.me/Muqeet656
+┃◈├•https://t.me/Tohid_Tech
 ┃◈┃
 ┃◈├•*WʜᴀᴛsAᴘᴘ Gʀᴏᴜᴘ* 🌟
-┃◈├•https://chat.whatsapp.com/Ewj28yRfkVnIUXZ29YRj5E
+┃◈├•https://chat.whatsapp.com/IqRWSp7pXx8DIMtSgDICGu
 ┃◈┃
 ┃◈├•*WʜᴀᴛsAᴘᴘ ᴄʜᴇɴɴᴀʟ* 🌟
-┃◈├•https://whatsapp.com/channel/0029VbAqZNoDDmFSGN0sgx3L
+┃◈├•https://whatsapp.com/channel/0029VaGyP933bbVC7G0x0i2T
 ┃◈┃
 ┃◈┃*Yᴏᴜ-ᴛᴜʙᴇ ᴛᴜᴛᴏʀɪᴀʟꜱ* 🌟 
-┃◈├•Coming Soon 🔜 (Inshallah 💕)
+┃◈├•https://youtube.com/Tohidkhan_6332
 ┃◈┃
 ┃◈├•*ɢɪᴛʜᴜʙ* 🌟
-┃◈├•http://GitHub.com/muqeet908
+┃◈├•http://GitHub.com/Tohidkhan6332
 ┃◈┃
 ┃◈├•*Wᴇʙsɪᴛᴇ* 🌟
-┃◈├•ERROR ⚠️
+┃◈├•https://tohid-khan-web.vercel.app/
 ┃◈┃
-┃◈├•*MUQEET_MD--WHATTSAPP-BOT* 🥀
+┃◈├•*TOHID_MD--WHATTSAPP-BOT* 🥀
 ┃◈╰──────────●●►
-╰━━━〔 *MUQEET_MD SESSION* 〕━━━┈⊷
+┃◈╭─────────────●●►
+┃◈├ ╔═╦═╗───╔══╗╔╗╔╗╔╗
+┃◈├ ║║║║╠╦╦═╩╗╔╩╣╚╬╬╝║
+┃◈├ ║║║║║╔╩══╣║╬║║║║╬║
+┃◈├ ╚╩═╩╩╝───╚╩═╩╩╩╩═╝
+┃◈╰─────────────●●►
+╰─────────────●●►
+______________________________
+Use your Session ID Above to Deploy your Bot.
+Check on YouTube Channel for Deployment 
+Procedure(Ensure you have Github Account and Billed 
+Heroku Account First.)
+Don't Forget To Give Star⭐ To My Repo
+╭────────────────────┈⊷
+├━━━〔 *TOHID_MD SESSION* 〕━━━┈⊷
+╰────────────────────┈⊷
 `;
+
 const { upload } = require('./mega');
 const {
     default: makeWASocket,
@@ -43,6 +58,7 @@ const {
     DisconnectReason
 } = require("@whiskeysockets/baileys");
 
+// Ensure the directory is empty when the app starts
 if (fs.existsSync('./auth_info_baileys')) {
     fs.emptyDirSync(__dirname + '/auth_info_baileys');
 }
@@ -50,10 +66,10 @@ if (fs.existsSync('./auth_info_baileys')) {
 router.get('/', async (req, res) => {
     let num = req.query.number;
 
-    async function TOHID() {
+    async function SUHAIL() {
         const { state, saveCreds } = await useMultiFileAuthState(`./auth_info_baileys`);
         try {
-            let sock = makeWASocket({
+            let Smd = makeWASocket({
                 auth: {
                     creds: state.creds,
                     keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "fatal" }).child({ level: "fatal" })),
@@ -63,25 +79,28 @@ router.get('/', async (req, res) => {
                 browser: Browsers.macOS("Safari"),
             });
 
-            if (!sock.authState.creds.registered) {
+            if (!Smd.authState.creds.registered) {
                 await delay(1500);
                 num = num.replace(/[^0-9]/g, '');
-                const code = await sock.requestPairingCode(num + '@s.whatsapp.net');
+                const code = await Smd.requestPairingCode(num);
                 if (!res.headersSent) {
                     await res.send({ code });
                 }
             }
 
-            sock.ev.on('creds.update', saveCreds);
-            sock.ev.on("connection.update", async (s) => {
+            Smd.ev.on('creds.update', saveCreds);
+            Smd.ev.on("connection.update", async (s) => {
                 const { connection, lastDisconnect } = s;
 
                 if (connection === "open") {
                     try {
                         await delay(10000);
-                        const auth_path = './auth_info_baileys/';
-                        let user = sock.user.id;
+                        if (fs.existsSync('./auth_info_baileys/creds.json'));
 
+                        const auth_path = './auth_info_baileys/';
+                        let user = Smd.user.id;
+
+                        // Define randomMegaId function to generate random IDs
                         function randomMegaId(length = 6, numberLength = 4) {
                             const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
                             let result = '';
@@ -92,13 +111,14 @@ router.get('/', async (req, res) => {
                             return `${result}${number}`;
                         }
 
+                        // Upload credentials to Mega
                         const mega_url = await upload(fs.createReadStream(auth_path + 'creds.json'), `${randomMegaId()}.json`);
                         const Id_session = mega_url.replace('https://mega.nz/file/', '');
 
-                        const Scan_Id = `Muqeet~${Id_session}`;
+                        const Scan_Id = Id_session;
 
-                        let msgsss = await sock.sendMessage(user, { text: Scan_Id });
-                        await sock.sendMessage(user, { text: MESSAGE }, { quoted: msgsss });
+                        let msgsss = await Smd.sendMessage(user, { text: Scan_Id });
+                        await Smd.sendMessage(user, { text: MESSAGE }, { quoted: msgsss });
                         await delay(1000);
                         try { await fs.emptyDirSync(__dirname + '/auth_info_baileys'); } catch (e) {}
 
@@ -110,6 +130,7 @@ router.get('/', async (req, res) => {
                     await fs.emptyDirSync(__dirname + '/auth_info_baileys');
                 }
 
+                // Handle connection closures
                 if (connection === "close") {
                     let reason = new Boom(lastDisconnect?.error)?.output.statusCode;
                     if (reason === DisconnectReason.connectionClosed) {
@@ -118,7 +139,7 @@ router.get('/', async (req, res) => {
                         console.log("Connection Lost from Server!");
                     } else if (reason === DisconnectReason.restartRequired) {
                         console.log("Restart Required, Restarting...");
-                        TOHID().catch(err => console.log(err));
+                        SUHAIL().catch(err => console.log(err));
                     } else if (reason === DisconnectReason.timedOut) {
                         console.log("Connection TimedOut!");
                     } else {
@@ -131,10 +152,10 @@ router.get('/', async (req, res) => {
             });
 
         } catch (err) {
-            console.log("Error in TOHID function: ", err);
+            console.log("Error in SUHAIL function: ", err);
             exec('pm2 restart qasim');
             console.log("Service restarted due to error");
-            TOHID();
+            SUHAIL();
             await fs.emptyDirSync(__dirname + '/auth_info_baileys');
             if (!res.headersSent) {
                 await res.send({ code: "Try After Few Minutes" });
@@ -142,7 +163,8 @@ router.get('/', async (req, res) => {
         }
     }
 
-    await TOHID();
+    await SUHAIL();
 });
 
 module.exports = router;
+                    
