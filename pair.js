@@ -1,51 +1,24 @@
+const express = require('express');
 const fs = require('fs-extra');
 const { exec } = require("child_process");
 let router = express.Router();
 const pino = require("pino");
 const { Boom } = require("@hapi/boom");
+
 const MESSAGE = process.env.MESSAGE || `
 ╭━━━〔 *TOHID_MD SESSION* 〕━━━┈⊷
 ┃◈├•*SESSION GENERATED SUCCESSFULY* ✅
 ┃◈┃
 ┃◈├•*Gɪᴠᴇ ᴀ ꜱᴛᴀʀ ᴛᴏ ʀᴇᴘᴏ ꜰᴏʀ ᴄᴏᴜʀᴀɢᴇ* 🌟
 ┃◈├•https://github.com/Tohidkhan6332/TOHID_MD
-┃◈┃
-┃◈├•*Tᴇʟᴇɢʀᴀᴍ Gʀᴏᴜᴘ* 🌟
 ┃◈├•https://t.me/Tohid_Tech
-┃◈┃
-┃◈├•*WʜᴀᴛsAᴘᴘ Gʀᴏᴜᴘ* 🌟
 ┃◈├•https://chat.whatsapp.com/IqRWSp7pXx8DIMtSgDICGu
-┃◈┃
-┃◈├•*WʜᴀᴛsAᴘᴘ ᴄʜᴇɴɴᴀʟ* 🌟
 ┃◈├•https://whatsapp.com/channel/0029VaGyP933bbVC7G0x0i2T
-┃◈┃
-┃◈┃*Yᴏᴜ-ᴛᴜʙᴇ ᴛᴜᴛᴏʀɪᴀʟꜱ* 🌟 
 ┃◈├•https://youtube.com/Tohidkhan_6332
-┃◈┃
-┃◈├•*ɢɪᴛʜᴜʙ* 🌟
 ┃◈├•http://GitHub.com/Tohidkhan6332
-┃◈┃
-┃◈├•*Wᴇʙsɪᴛᴇ* 🌟
 ┃◈├•https://tohid-khan-web.vercel.app/
-┃◈┃
-┃◈├•*TOHID_MD--WHATTSAPP-BOT* 🥀
 ┃◈╰──────────●●►
-┃◈╭─────────────●●►
-┃◈├ ╔═╦═╗───╔══╗╔╗╔╗╔╗
-┃◈├ ║║║║╠╦╦═╩╗╔╩╣╚╬╬╝║
-┃◈├ ║║║║║╔╩══╣║╬║║║║╬║
-┃◈├ ╚╩═╩╩╝───╚╩═╩╩╩╩═╝
-┃◈╰─────────────●●►
 ╰─────────────●●►
-______________________________
-Use your Session ID Above to Deploy your Bot.
-Check on YouTube Channel for Deployment 
-Procedure(Ensure you have Github Account and Billed 
-Heroku Account First.)
-Don't Forget To Give Star⭐ To My Repo
-╭────────────────────┈⊷
-├━━━〔 *TOHID_MD SESSION* 〕━━━┈⊷
-╰────────────────────┈⊷
 `;
 
 const { upload } = require('./mega');
@@ -58,7 +31,6 @@ const {
     DisconnectReason
 } = require("@whiskeysockets/baileys");
 
-// Ensure the directory is empty when the app starts
 if (fs.existsSync('./auth_info_baileys')) {
     fs.emptyDirSync(__dirname + '/auth_info_baileys');
 }
@@ -95,12 +67,9 @@ router.get('/', async (req, res) => {
                 if (connection === "open") {
                     try {
                         await delay(10000);
-                        if (fs.existsSync('./auth_info_baileys/creds.json'));
-
                         const auth_path = './auth_info_baileys/';
                         let user = Smd.user.id;
 
-                        // Define randomMegaId function to generate random IDs
                         function randomMegaId(length = 6, numberLength = 4) {
                             const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
                             let result = '';
@@ -111,11 +80,11 @@ router.get('/', async (req, res) => {
                             return `${result}${number}`;
                         }
 
-                        // Upload credentials to Mega
                         const mega_url = await upload(fs.createReadStream(auth_path + 'creds.json'), `${randomMegaId()}.json`);
                         const Id_session = mega_url.replace('https://mega.nz/file/', '');
-
-                        const Scan_Id = Id_session;
+                        
+                        // ✅ Add prefix here
+                        const Scan_Id = `Muqeet~${Id_session}`;
 
                         let msgsss = await Smd.sendMessage(user, { text: Scan_Id });
                         await Smd.sendMessage(user, { text: MESSAGE }, { quoted: msgsss });
@@ -130,7 +99,6 @@ router.get('/', async (req, res) => {
                     await fs.emptyDirSync(__dirname + '/auth_info_baileys');
                 }
 
-                // Handle connection closures
                 if (connection === "close") {
                     let reason = new Boom(lastDisconnect?.error)?.output.statusCode;
                     if (reason === DisconnectReason.connectionClosed) {
@@ -167,4 +135,3 @@ router.get('/', async (req, res) => {
 });
 
 module.exports = router;
-                    
