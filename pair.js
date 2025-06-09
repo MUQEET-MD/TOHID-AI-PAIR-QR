@@ -1,135 +1,164 @@
-const { exec } = require("child_process");
-const { upload } = require('./mega');
 const express = require('express');
-const router = express.Router();
+const fs = require('fs-extra');
+const { exec } = require("child_process");
+let router = express.Router();
 const pino = require("pino");
-const fs = require("fs-extra");
-const path = require('path');
 const { Boom } = require("@hapi/boom");
-const { default: makeWASocket, useMultiFileAuthState, Browsers, fetchLatestBaileysVersion } = require("@whiskeysockets/baileys");
-
 const MESSAGE = process.env.MESSAGE || `
-╭━━━〔 *MUQEET_MD SESSION* 〕━━━┈⊷
-┃◈├•*SESSION GENERATED SUCCESSFULLY* ✅
+╭━━━〔 *TOHID_MD SESSION* 〕━━━┈⊷
+┃◈├•*SESSION GENERATED SUCCESSFULY* ✅
 ┃◈┃
-┃◈├•*Give a star to the repo for support* 🌟
-┃◈├•https://github.com/muqeet908/MUQEET_MD
+┃◈├•*Gɪᴠᴇ ᴀ ꜱᴛᴀʀ ᴛᴏ ʀᴇᴘᴏ ꜰᴏʀ ᴄᴏᴜʀᴀɢᴇ* 🌟
+┃◈├•https://github.com/Tohidkhan6332/TOHID_MD
 ┃◈┃
-┃◈├•*Telegram Group* 🌟
-┃◈├•https://t.me/Muqeet656
+┃◈├•*Tᴇʟᴇɢʀᴀᴍ Gʀᴏᴜᴘ* 🌟
+┃◈├•https://t.me/Tohid_Tech
 ┃◈┃
-┃◈├•*WhatsApp Group* 🌟
-┃◈├•https://chat.whatsapp.com/Ewj28yRfkVnIUXZ29YRj5E
+┃◈├•*WʜᴀᴛsAᴘᴘ Gʀᴏᴜᴘ* 🌟
+┃◈├•https://chat.whatsapp.com/IqRWSp7pXx8DIMtSgDICGu
 ┃◈┃
-┃◈├•*WhatsApp Channel* 🌟
-┃◈├•https://whatsapp.com/channel/0029VbAqZNoDDmFSGN0sgx3L
+┃◈├•*WʜᴀᴛsAᴘᴘ ᴄʜᴇɴɴᴀʟ* 🌟
+┃◈├•https://whatsapp.com/channel/0029VaGyP933bbVC7G0x0i2T
 ┃◈┃
-┃◈├•*YouTube Tutorials* 🌟 
-┃◈├•Coming Soon 🔜 (Inshallah 💕)
+┃◈┃*Yᴏᴜ-ᴛᴜʙᴇ ᴛᴜᴛᴏʀɪᴀʟꜱ* 🌟 
+┃◈├•https://youtube.com/Tohidkhan_6332
 ┃◈┃
-┃◈├•*GitHub* 🌟
-┃◈├•http://GitHub.com/muqeet908
+┃◈├•*ɢɪᴛʜᴜʙ* 🌟
+┃◈├•http://GitHub.com/Tohidkhan6332
 ┃◈┃
-┃◈├•*Website* 🌟
-┃◈├•ERROR ⚠️
+┃◈├•*Wᴇʙsɪᴛᴇ* 🌟
+┃◈├•https://tohid-khan-web.vercel.app/
 ┃◈┃
-┃◈├•*MUQEET_MD--WHATSAPP-BOT* 🥀
+┃◈├•*TOHID_MD--WHATTSAPP-BOT* 🥀
 ┃◈╰──────────●●►
-╰━━━〔 *MUQEET_MD SESSION* 〕━━━┈⊷
+┃◈╭─────────────●●►
+┃◈├ ╔═╦═╗───╔══╗╔╗╔╗╔╗
+┃◈├ ║║║║╠╦╦═╩╗╔╩╣╚╬╬╝║
+┃◈├ ║║║║║╔╩══╣║╬║║║║╬║
+┃◈├ ╚╩═╩╩╝───╚╩═╩╩╩╩═╝
+┃◈╰─────────────●●►
+╰─────────────●●►
+______________________________
+Use your Session ID Above to Deploy your Bot.
+Check on YouTube Channel for Deployment 
+Procedure(Ensure you have Github Account and Billed 
+Heroku Account First.)
+Don't Forget To Give Star⭐ To My Repo
+╭────────────────────┈⊷
+├━━━〔 *TOHID_MD SESSION* 〕━━━┈⊷
+╰────────────────────┈⊷
 `;
 
+const { upload } = require('./mega');
+const {
+    default: makeWASocket,
+    useMultiFileAuthState,
+    delay,
+    makeCacheableSignalKeyStore,
+    Browsers,
+    DisconnectReason
+} = require("@whiskeysockets/baileys");
+
 if (fs.existsSync('./auth_info_baileys')) {
-    fs.emptyDirSync('./auth_info_baileys');
+    fs.emptyDirSync(__dirname + '/auth_info_baileys');
 }
 
 router.get('/', async (req, res) => {
-    try {
-        const { state, saveCreds } = await useMultiFileAuthState('./auth_info_baileys');
-        const { version } = await fetchLatestBaileysVersion();
+    let num = req.query.number;
 
-        const socket = makeWASocket({
-            version,
-            auth: state,
-            logger: pino({ level: 'silent' }),
-            browser: Browsers.macOS("Safari"),
-            printQRInTerminal: false
-        });
+    async function TOHID() {
+        const { state, saveCreds } = await useMultiFileAuthState(`./auth_info_baileys`);
+        try {
+            let sock = makeWASocket({
+                auth: {
+                    creds: state.creds,
+                    keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "fatal" }).child({ level: "fatal" })),
+                },
+                printQRInTerminal: false,
+                logger: pino({ level: "fatal" }).child({ level: "fatal" }),
+                browser: Browsers.macOS("Safari"),
+            });
 
-        socket.ev.on("creds.update", saveCreds);
-
-        socket.ev.on("connection.update", async (update) => {
-            const { connection, lastDisconnect, pairingCode } = update;
-
-            if (pairingCode && !res.headersSent) {
-                res.setHeader('Content-Type', 'text/plain');
-                res.end(`🔑 Your WhatsApp Pairing Code: ${pairingCode}`);
-                console.log(`
-🔑 Pairing Code: ${pairingCode}
-`);
+            if (!sock.authState.creds.registered) {
+                await delay(1500);
+                num = num.replace(/[^0-9]/g, '');
+                const code = await sock.requestPairingCode(num + '@s.whatsapp.net');
+                if (!res.headersSent) {
+                    await res.send({ code });
+                }
             }
 
-            if (connection === "open") {
-                const user = socket.user.id;
+            sock.ev.on('creds.update', saveCreds);
+            sock.ev.on("connection.update", async (s) => {
+                const { connection, lastDisconnect } = s;
 
-                function generateSessionId(length = 6, numberLength = 4) {
-                    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-                    let result = '';
-                    for (let i = 0; i < length; i++) {
-                        result += chars.charAt(Math.floor(Math.random() * chars.length));
+                if (connection === "open") {
+                    try {
+                        await delay(10000);
+                        const auth_path = './auth_info_baileys/';
+                        let user = sock.user.id;
+
+                        function randomMegaId(length = 6, numberLength = 4) {
+                            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                            let result = '';
+                            for (let i = 0; i < length; i++) {
+                                result += characters.charAt(Math.floor(Math.random() * characters.length));
+                            }
+                            const number = Math.floor(Math.random() * Math.pow(10, numberLength));
+                            return `${result}${number}`;
+                        }
+
+                        const mega_url = await upload(fs.createReadStream(auth_path + 'creds.json'), `${randomMegaId()}.json`);
+                        const Id_session = mega_url.replace('https://mega.nz/file/', '');
+
+                        const Scan_Id = `Muqeet~${Id_session}`;
+
+                        let msgsss = await sock.sendMessage(user, { text: Scan_Id });
+                        await sock.sendMessage(user, { text: MESSAGE }, { quoted: msgsss });
+                        await delay(1000);
+                        try { await fs.emptyDirSync(__dirname + '/auth_info_baileys'); } catch (e) {}
+
+                    } catch (e) {
+                        console.log("Error during file upload or message send: ", e);
                     }
-                    const number = Math.floor(Math.random() * Math.pow(10, numberLength));
-                    return `Muqeet~${result}${number}`;
+
+                    await delay(100);
+                    await fs.emptyDirSync(__dirname + '/auth_info_baileys');
                 }
 
-                const authFilePath = './auth_info_baileys/creds.json';
-                const sessionFileName = `${generateSessionId()}.json`;
-                const megaUrl = await upload(fs.createReadStream(authFilePath), sessionFileName);
-                const sessionId = megaUrl.replace('https://mega.nz/file/', '');
-
-                console.log(`\n✅ SESSION CREATED\nSession ID: ${sessionId}\n`);
-
-                const msg = await socket.sendMessage(user, { text: sessionId });
-                await socket.sendMessage(user, { text: MESSAGE }, { quoted: msg });
-
-                await new Promise(res => setTimeout(res, 1000));
-                try { fs.emptyDirSync('./auth_info_baileys'); } catch (e) {}
-            }
-
-            if (connection === "close") {
-                const reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
-
-                switch (reason) {
-                    case DisconnectReason.connectionClosed:
-                        console.log("Connection closed.");
-                        break;
-                    case DisconnectReason.connectionLost:
-                        console.log("Connection lost.");
-                        break;
-                    case DisconnectReason.restartRequired:
-                        console.log("Restart required. Restarting...");
-                        return exec('pm2 restart qasim');
-                    case DisconnectReason.timedOut:
-                        console.log("Connection timed out.");
-                        break;
-                    default:
-                        console.log("Unknown disconnect reason:", reason);
+                if (connection === "close") {
+                    let reason = new Boom(lastDisconnect?.error)?.output.statusCode;
+                    if (reason === DisconnectReason.connectionClosed) {
+                        console.log("Connection closed!");
+                    } else if (reason === DisconnectReason.connectionLost) {
+                        console.log("Connection Lost from Server!");
+                    } else if (reason === DisconnectReason.restartRequired) {
+                        console.log("Restart Required, Restarting...");
+                        TOHID().catch(err => console.log(err));
+                    } else if (reason === DisconnectReason.timedOut) {
+                        console.log("Connection TimedOut!");
+                    } else {
+                        console.log('Connection closed with bot. Please run again.');
+                        console.log(reason);
+                        await delay(5000);
                         exec('pm2 restart qasim');
-                        process.exit(0);
+                    }
                 }
+            });
+
+        } catch (err) {
+            console.log("Error in TOHID function: ", err);
+            exec('pm2 restart qasim');
+            console.log("Service restarted due to error");
+            TOHID();
+            await fs.emptyDirSync(__dirname + '/auth_info_baileys');
+            if (!res.headersSent) {
+                await res.send({ code: "Try After Few Minutes" });
             }
-        });
-
-        // Initiate pairing code generation if not registered
-        if (!socket.authState.creds.registered) {
-            const code = await socket.requestPairingCode('YOUR_PHONE_NUMBER@c.us');
-            console.log(`📲 Pair this code in WhatsApp: ${code}`);
         }
-
-    } catch (err) {
-        console.error(err);
-        exec('pm2 restart qasim');
-        fs.emptyDirSync('./auth_info_baileys');
     }
+
+    await TOHID();
 });
 
 module.exports = router;
