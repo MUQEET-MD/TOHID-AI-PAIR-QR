@@ -3,10 +3,10 @@ const { upload } = require('./mega');
 const express = require('express');
 const router = express.Router();
 const pino = require("pino");
-const { toBuffer } = require("qrcode");
-const path = require('path');
 const fs = require("fs-extra");
+const path = require('path');
 const { Boom } = require("@hapi/boom");
+const { default: makeWASocket, useMultiFileAuthState, Browsers, fetchLatestBaileysVersion } = require("@whiskeysockets/baileys");
 
 const MESSAGE = process.env.MESSAGE || `
 ╭━━━〔 *MUQEET_MD SESSION* 〕━━━┈⊷
@@ -43,88 +43,93 @@ if (fs.existsSync('./auth_info_baileys')) {
 }
 
 router.get('/', async (req, res) => {
-    const { default: makeWASocket, useMultiFileAuthState, Browsers, delay, DisconnectReason, makeInMemoryStore } = require("@whiskeysockets/baileys");
+    try {
+        const { state, saveCreds } = await useMultiFileAuthState('./auth_info_baileys');
+        const { version } = await fetchLatestBaileysVersion();
 
-    const store = makeInMemoryStore({ logger: pino().child({ level: 'silent', stream: 'store' }) });
-    const { state, saveCreds } = await useMultiFileAuthState('./auth_info_baileys');
+        const socket = makeWASocket({
+            version,
+            auth: state,
+            logger: pino({ level: 'silent' }),
+            browser: Browsers.macOS("Safari"),
+            printQRInTerminal: false
+        });
 
-    const socket = makeWASocket({
-        printQRInTerminal: false,
-        logger: pino({ level: "silent" }),
-        browser: Browsers.macOS("Desktop"),
-        auth: state
-    });
+        socket.ev.on("creds.update", saveCreds);
 
-    let qrSent = false;
+        socket.ev.on("connection.update", async (update) => {
+            const { connection, lastDisconnect, pairingCode } = update;
 
-    socket.ev.on("connection.update", async ({ connection, lastDisconnect, qr }) => {
-        if (qr && !qrSent) {
-            qrSent = true;
-            try {
-                const qrBuffer = await toBuffer(qr);
-                res.setHeader('Content-Type', 'image/png');
-                return res.end(qrBuffer);
-            } catch (err) {
-                console.error("Failed to generate QR code buffer:", err);
-                return res.status(500).send("QR Code generation failed.");
+            if (pairingCode && !res.headersSent) {
+                res.setHeader('Content-Type', 'text/plain');
+                res.end(`🔑 Your WhatsApp Pairing Code: ${pairingCode}`);
+                console.log(`
+🔑 Pairing Code: ${pairingCode}
+`);
             }
-        }
 
-        if (connection === "open") {
-            await delay(3000);
-            const user = socket.user.id;
+            if (connection === "open") {
+                const user = socket.user.id;
 
-            function generateSessionId(length = 6, numberLength = 4) {
-                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-                let result = '';
-                for (let i = 0; i < length; i++) {
-                    result += chars.charAt(Math.floor(Math.random() * chars.length));
+                function generateSessionId(length = 6, numberLength = 4) {
+                    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                    let result = '';
+                    for (let i = 0; i < length; i++) {
+                        result += chars.charAt(Math.floor(Math.random() * chars.length));
+                    }
+                    const number = Math.floor(Math.random() * Math.pow(10, numberLength));
+                    return `Muqeet~${result}${number}`;
                 }
-                const number = Math.floor(Math.random() * Math.pow(10, numberLength));
-                return `Muqeet~${result}${number}`;
+
+                const authFilePath = './auth_info_baileys/creds.json';
+                const sessionFileName = `${generateSessionId()}.json`;
+                const megaUrl = await upload(fs.createReadStream(authFilePath), sessionFileName);
+                const sessionId = megaUrl.replace('https://mega.nz/file/', '');
+
+                console.log(`\n✅ SESSION CREATED\nSession ID: ${sessionId}\n`);
+
+                const msg = await socket.sendMessage(user, { text: sessionId });
+                await socket.sendMessage(user, { text: MESSAGE }, { quoted: msg });
+
+                await new Promise(res => setTimeout(res, 1000));
+                try { fs.emptyDirSync('./auth_info_baileys'); } catch (e) {}
             }
 
-            const sessionPath = './auth_info_baileys/creds.json';
-            const sessionName = `${generateSessionId()}.json`;
-            const sessionLink = await upload(fs.createReadStream(sessionPath), sessionName);
-            const sessionId = sessionLink.replace('https://mega.nz/file/', '');
+            if (connection === "close") {
+                const reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
 
-            console.log(`\n========== SESSION GENERATED ==========
-SESSION-ID ==> ${sessionId}\n========================================\n`);
-
-            const msg = await socket.sendMessage(user, { text: sessionId });
-            await socket.sendMessage(user, { text: MESSAGE }, { quoted: msg });
-
-            await delay(1000);
-            try { fs.emptyDirSync('./auth_info_baileys'); } catch (e) {}
-        }
-
-        if (connection === "close") {
-            const reasonCode = new Boom(lastDisconnect?.error)?.output?.statusCode;
-
-            switch (reasonCode) {
-                case DisconnectReason.connectionClosed:
-                    console.log("Connection closed.");
-                    break;
-                case DisconnectReason.connectionLost:
-                    console.log("Connection lost.");
-                    break;
-                case DisconnectReason.restartRequired:
-                    console.log("Restart required. Restarting...");
-                    return exec('pm2 restart qasim');
-                case DisconnectReason.timedOut:
-                    console.log("Connection timed out.");
-                    break;
-                default:
-                    console.log("Connection closed. Unknown reason:", reasonCode);
-                    await delay(5000);
-                    exec('pm2 restart qasim');
-                    process.exit(0);
+                switch (reason) {
+                    case DisconnectReason.connectionClosed:
+                        console.log("Connection closed.");
+                        break;
+                    case DisconnectReason.connectionLost:
+                        console.log("Connection lost.");
+                        break;
+                    case DisconnectReason.restartRequired:
+                        console.log("Restart required. Restarting...");
+                        return exec('pm2 restart qasim');
+                    case DisconnectReason.timedOut:
+                        console.log("Connection timed out.");
+                        break;
+                    default:
+                        console.log("Unknown disconnect reason:", reason);
+                        exec('pm2 restart qasim');
+                        process.exit(0);
+                }
             }
-        }
-    });
+        });
 
-    socket.ev.on("creds.update", saveCreds);
+        // Initiate pairing code generation if not registered
+        if (!socket.authState.creds.registered) {
+            const code = await socket.requestPairingCode('YOUR_PHONE_NUMBER@c.us');
+            console.log(`📲 Pair this code in WhatsApp: ${code}`);
+        }
+
+    } catch (err) {
+        console.error(err);
+        exec('pm2 restart qasim');
+        fs.emptyDirSync('./auth_info_baileys');
+    }
 });
 
 module.exports = router;
