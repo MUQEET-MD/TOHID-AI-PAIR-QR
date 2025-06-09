@@ -32,7 +32,7 @@ const MESSAGE = process.env.MESSAGE || `
 ┃◈├•*MUQEET_MD--WHATTSAPP-BOT* 🥀
 ┃◈╰──────────●●►
 ╰━━━〔 *MUQEET_MD SESSION* 〕━━━┈⊷
-
+`;
 const { upload } = require('./mega');
 const {
     default: makeWASocket,
